@@ -48,7 +48,7 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list item-layout="vertical" size="large"  :grid="{ gutter: 16, column: 4 }" :data-source="ebooks">
+      <a-list item-layout="vertical" size="large"  :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
         <template #footer>
           <div>
             <b>ant design vue</b>
@@ -109,7 +109,7 @@ const actions: Record<string, string>[] = [
   { type: 'MessageOutlined', text: '2' },
 ];
 onMounted(() => {
-  axios.get('http://localhost:8880/ebook/list1?name=Spring').then((res) => {
+  axios.get('http://localhost:8880/ebook/list1').then((res) => {
     const data = res.data
     ebooks.value = data.content
     ebook1.books = data.content
@@ -117,3 +117,13 @@ onMounted(() => {
 })
 
 </script>
+
+<style scoped>
+.ant-avatar {
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 8%;
+  margin: 5px 0;
+}
+</style>
