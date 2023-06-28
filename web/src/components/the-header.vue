@@ -15,16 +15,18 @@
 </template>
 
 <script lang="ts" setup>
-import {defineProps, onMounted} from 'vue';
+import {defineProps, onMounted, ref} from 'vue';
 import axios from "axios";
 
   type Props={
     title:string
   }
   defineProps<Props>();
+  const ebook = ref()
   onMounted(() => {
     axios.get('http://localhost:8880/ebook/list1?name=Spring').then((res) => {
-      console.log(res)
+      const data = res.data
+      ebook.value = data.content
     })
   })
 
