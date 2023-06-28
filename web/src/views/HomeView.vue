@@ -48,7 +48,7 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="listData">
+      <a-list item-layout="vertical" size="large"  :grid="{ gutter: 16, column: 4 }" :data-source="ebooks">
         <template #footer>
           <div>
             <b>ant design vue</b>
@@ -56,27 +56,19 @@
           </div>
         </template>
         <template #renderItem="{ item }">
-          <a-list-item key="item.title">
+          <a-list-item key="item.name">
             <template #actions>
-          <span v-for="{ type, text } in actions" :key="type">
-            <component :is="type" style="margin-right: 8px" />
-            {{ text }}
-          </span>
-            </template>
-            <template #extra>
-              <img
-                  width="272"
-                  alt="logo"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-              />
+              <span v-for="{ type, text } in actions" :key="type">
+                <component :is="type" style="margin-right: 8px" />
+                {{ text }}
+              </span>
             </template>
             <a-list-item-meta :description="item.description">
               <template #title>
-                <a :href="item.href">{{ item.title }}</a>
+                <a :href="item.href">{{ item.name }}</a>
               </template>
-              <template #avatar><a-avatar :src="item.avatar" /></template>
+              <template #avatar><a-avatar :src="item.cover" /></template>
             </a-list-item-meta>
-            {{ item.content }}
           </a-list-item>
         </template>
       </a-list>
@@ -89,7 +81,7 @@ import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-v
 import {defineComponent, onMounted, reactive, ref} from 'vue';
 import axios from "axios";
 
-const ebook = ref()
+const ebooks = ref()
 const ebook1 = reactive({books:[]})
 const listData: Record<string, string>[] = [];
 
@@ -119,7 +111,7 @@ const actions: Record<string, string>[] = [
 onMounted(() => {
   axios.get('http://localhost:8880/ebook/list1?name=Spring').then((res) => {
     const data = res.data
-    ebook.value = data.content
+    ebooks.value = data.content
     ebook1.books = data.content
   })
 })
