@@ -15,13 +15,18 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue';
+import {defineProps, onMounted} from 'vue';
+import axios from "axios";
 
   type Props={
     title:string
   }
-
   defineProps<Props>();
+  onMounted(() => {
+    axios.get('http://localhost:8880/ebook/list1?name=Spring').then((res) => {
+      console.log(res)
+    })
+  })
 
 </script>
 
