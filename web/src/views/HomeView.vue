@@ -109,7 +109,7 @@ const actions: Record<string, string>[] = [
   { type: 'MessageOutlined', text: '2' },
 ];
 onMounted(() => {
-  axios.get(process.env.VUE_APP_SERVER + '/ebook/list1').then((res) => {
+  axios.get('/ebook/list1').then((res) => {
     const data = res.data
     ebooks.value = data.content
     ebook1.books = data.content
