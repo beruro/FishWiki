@@ -7,6 +7,7 @@ import com.hanafish.hanawiki.domain.EbookExample;
 import com.hanafish.hanawiki.mapper.EbookMapper;
 import com.hanafish.hanawiki.req.EbookReq;
 import com.hanafish.hanawiki.resp.EbookResp;
+import com.hanafish.hanawiki.resp.PageResq;
 import com.hanafish.hanawiki.util.CopyUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -24,13 +25,13 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public List<EbookResp> list(EbookReq req) {
+    public PageResq<EbookResp> list(EbookReq req) {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
-        PageHelper.startPage(1,3);
+        PageHelper.startPage(req.getPage(),req.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
@@ -43,6 +44,11 @@ public class EbookService {
 //            respList.add(ebookResp);
 //        }
         List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
-        return list; //对象列表的复制
+
+        PageResq<EbookResp> pageResq = new PageResq<>();
+        pageResq.setTotal(pageInfo.getTotal());
+        pageResq.setList(list);
+
+        return pageResq; //对象列表的复制
     }
 }
