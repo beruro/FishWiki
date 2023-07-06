@@ -5,8 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.hanafish.hanawiki.domain.Ebook;
 import com.hanafish.hanawiki.domain.EbookExample;
 import com.hanafish.hanawiki.mapper.EbookMapper;
-import com.hanafish.hanawiki.req.EbookReq;
-import com.hanafish.hanawiki.resp.EbookResp;
+import com.hanafish.hanawiki.req.EbookQueryReq;
+import com.hanafish.hanawiki.req.EbookSaveReq;
+import com.hanafish.hanawiki.resp.EbookQueryResp;
 import com.hanafish.hanawiki.resp.PageResq;
 import com.hanafish.hanawiki.util.CopyUtil;
 import jakarta.annotation.Resource;
@@ -25,7 +26,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResq<EbookResp> list(EbookReq req) {
+    public PageResq<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
@@ -43,12 +44,26 @@ public class EbookService {
 //            BeanUtils.copyProperties(ebook, ebookResp);
 //            respList.add(ebookResp);
 //        }
-        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 
-        PageResq<EbookResp> pageResq = new PageResq();
+        PageResq<EbookQueryResp> pageResq = new PageResq();
         pageResq.setTotal(pageInfo.getTotal());
         pageResq.setList(list);
 
         return pageResq; //对象列表的复制
+    }
+
+    /**
+     * 保存
+     */
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if (ObjectUtils.isEmpty(req.getId())) {
+            // 新增
+            ebookMapper.insert(ebook);
+        } else {
+            // 更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }

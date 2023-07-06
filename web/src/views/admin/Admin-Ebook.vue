@@ -75,8 +75,12 @@ import axios from 'axios';
         dataIndex: 'name'
       },
       {
-        title: '分类',
-        slots: { customRender: 'category' }
+        title: '分类一',
+        dataIndex: 'category1Id'
+      },
+      {
+        title: '分类二',
+        dataIndex: 'category2Id'
       },
       {
         title: '文档数',
@@ -141,10 +145,19 @@ import axios from 'axios';
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true
-      setTimeout(() => {
-        modalVisible.value = false;
-        modalLoading.value = false
-      }, 2000)
+      axios.post("/ebook/save",ebook.value).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          modalVisible.value = false;
+          modalLoading.value = false
+
+          //重新加载列表
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize
+          })
+        }
+      });
     }
 
     /**

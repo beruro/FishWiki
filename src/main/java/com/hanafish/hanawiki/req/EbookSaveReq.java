@@ -1,6 +1,6 @@
-package com.hanafish.hanawiki.resp;
+package com.hanafish.hanawiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;
