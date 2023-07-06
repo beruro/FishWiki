@@ -83,19 +83,18 @@ import axios from "axios";
 
 const ebooks = ref()
 const ebook1 = reactive({books:[]})
-const listData: Record<string, string>[] = [];
-
-for (let i = 0; i < 23; i++) {
-  listData.push({
-    href: 'https://www.antdv.com/',
-    title: `ant design vue part ${i}`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description:
-        'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-        'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  });
-}
+// const listData: Record<string, string>[] = [];
+// for (let i = 0; i < 23; i++) {
+//   listData.push({
+//     href: 'https://www.antdv.com/',
+//     title: `ant design vue part ${i}`,
+//     avatar: 'https://joeschmoe.io/api/v1/random',
+//     description:
+//         'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+//     content:
+//         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+//   });
+// }
 
 const pagination = {
   onChange: (page: number) => {
@@ -109,10 +108,15 @@ const actions: Record<string, string>[] = [
   { type: 'MessageOutlined', text: '2' },
 ];
 onMounted(() => {
-  axios.get('/ebook/list1').then((res) => {
+  axios.get('/ebook/list1',{
+    params: {
+      page:1,
+      size:1000
+    }
+  }).then((res) => {
     const data = res.data
-    ebooks.value = data.content
-    ebook1.books = data.content
+    ebooks.value = data.content.list
+    // ebook1.books = data.content
   })
 })
 
