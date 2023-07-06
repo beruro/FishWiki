@@ -45,7 +45,7 @@ public class EbookService {
 //        }
         List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
 
-        PageResq<EbookResp> pageResq = new PageResq<>();
+        PageResq<EbookResp> pageResq = new PageResq();
         pageResq.setTotal(pageInfo.getTotal());
         pageResq.setList(list);
 
