@@ -10,6 +10,7 @@ import com.hanafish.hanawiki.req.EbookSaveReq;
 import com.hanafish.hanawiki.resp.EbookQueryResp;
 import com.hanafish.hanawiki.resp.PageResq;
 import com.hanafish.hanawiki.util.CopyUtil;
+import com.hanafish.hanawiki.util.SnowFlake;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class EbookService {
 
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResq<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample ebookExample = new EbookExample();
@@ -60,6 +64,7 @@ public class EbookService {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if (ObjectUtils.isEmpty(req.getId())) {
             // 新增
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         } else {
             // 更新

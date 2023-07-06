@@ -3,6 +3,11 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
+      <P>
+        <a-button type="primary" @click="add()" size="large">
+          新增
+        </a-button>
+      </P>
       <a-table
           :columns="columns"
           :row-key="record => record.id"
@@ -166,6 +171,14 @@ import axios from 'axios';
     const edit = (record: any) => {
       modalVisible.value = true;
       ebook.value = record
+    };
+
+    /**
+     * 编辑
+     */
+    const add = () => {
+      modalVisible.value = true;
+      ebook.value = {}
     };
 
     onMounted(() => {
