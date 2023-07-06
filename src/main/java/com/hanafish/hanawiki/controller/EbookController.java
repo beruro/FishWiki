@@ -7,6 +7,7 @@ import com.hanafish.hanawiki.resp.EbookQueryResp;
 import com.hanafish.hanawiki.resp.PageResq;
 import com.hanafish.hanawiki.service.EbookService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,7 +19,7 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping("/list1")
-    public CommonResp list(EbookQueryReq req) {
+    public CommonResp list(@Valid EbookQueryReq req) {
         CommonResp<PageResq<EbookQueryResp>> resp = new CommonResp<>();
         PageResq<EbookQueryResp> list = ebookService.list(req);
         resp.setContent(list);
