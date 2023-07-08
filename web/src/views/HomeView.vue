@@ -25,7 +25,10 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list item-layout="vertical" size="large"  :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
+      <div class="welcome" v-show="isShowWelcome">
+        <h1>欢迎使用知识库</h1>
+      </div>
+      <a-list v-show="!isShowWelcome" item-layout="vertical" size="large"  :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
         <template #footer>
           <div>
             <b>ant design vue</b>
@@ -84,9 +87,18 @@ const handleQueryCategory = () => {
   });
 };
 
-const handleClick = () => {
-  console.log("menu click")
+const isShowWelcome = ref(true);
+
+const handleClick = (value:any) => {
+  console.log("menu click",value)
+  if (value.key === 'welcome') {
+    isShowWelcome.value = true;
+  } else {
+    isShowWelcome.value = false;
+  }
 }
+
+
 // const listData: Record<string, string>[] = [];
 // for (let i = 0; i < 23; i++) {
 //   listData.push({
