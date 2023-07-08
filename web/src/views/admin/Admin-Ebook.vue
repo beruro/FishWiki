@@ -269,10 +269,6 @@ import {Tool} from "@/util/tool";
 
     onMounted(() => {
       handleQueryCategory()
-      handleQuery({
-        page:1,
-        size: pagination.value.pageSize
-      })
     })
 </script>
 <style scoped>

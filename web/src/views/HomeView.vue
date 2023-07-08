@@ -6,42 +6,19 @@
           v-model:openKeys="openKeys"
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
+          @click="handleClick"
       >
-        <a-sub-menu key="sub1">
-          <template #title>
-              <span>
-                <user-outlined />
-                subnav 1
-              </span>
+        <a-menu-item key="welcome">
+          <MailOutlined />
+          <span>欢迎</span>
+        </a-menu-item>
+        <a-sub-menu v-for="item in level1" :key="item.id" >
+          <template v-slot:title>
+            <span><user-outlined />{{item.name}}</span>
           </template>
-          <a-menu-item key="1">你是个u</a-menu-item>
-          <a-menu-item key="2">option2</a-menu-item>
-          <a-menu-item key="3">option3</a-menu-item>
-          <a-menu-item key="4">option4</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub2">
-          <template #title>
-              <span>
-                <laptop-outlined />
-                subnav 2
-              </span>
-          </template>
-          <a-menu-item key="5">option5</a-menu-item>
-          <a-menu-item key="6">option6</a-menu-item>
-          <a-menu-item key="7">option7</a-menu-item>
-          <a-menu-item key="8">option8</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub3">
-          <template #title>
-              <span>
-                <notification-outlined />
-                subnav 3
-              </span>
-          </template>
-          <a-menu-item key="9">option9</a-menu-item>
-          <a-menu-item key="10">option10</a-menu-item>
-          <a-menu-item key="11">option11</a-menu-item>
-          <a-menu-item key="12">option12</a-menu-item>
+          <a-menu-item v-for="child in item.children" :key="child.id">
+            <MailOutlined /><span>{{child.name}}</span>
+          </a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
@@ -80,9 +57,36 @@
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import {defineComponent, onMounted, reactive, ref} from 'vue';
 import axios from "axios";
+import { message } from 'ant-design-vue';
+import {Tool} from "@/util/tool";
 
 const ebooks = ref()
-const ebook1 = reactive({books:[]})
+// const ebook1 = reactive({books:[]})
+
+const level1 =  ref();
+let categorys: any;
+/**
+ * 查询所有分类
+ **/
+const handleQueryCategory = () => {
+  axios.get("/category/all").then((response) => {
+    const data = response.data;
+    if (data.success) {
+      categorys = data.content;
+      console.log("原始数组：", categorys);
+
+      level1.value = [];
+      level1.value = Tool.array2Tree(categorys, 0);
+      console.log("树形结构：", level1.value);
+    } else {
+      message.error(data.message);
+    }
+  });
+};
+
+const handleClick = () => {
+  console.log("menu click")
+}
 // const listData: Record<string, string>[] = [];
 // for (let i = 0; i < 23; i++) {
 //   listData.push({
@@ -108,6 +112,7 @@ const actions: Record<string, string>[] = [
   { type: 'MessageOutlined', text: '2' },
 ];
 onMounted(() => {
+  handleQueryCategory();
   axios.get('/ebook/list1',{
     params: {
       page:1,
