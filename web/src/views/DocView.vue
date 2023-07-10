@@ -1,6 +1,7 @@
 <template>
   <a-layout>
     <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }">
+      <h3 v-if="level1.length === 0">对不起，找不到相关文档！</h3>
       <a-row>
         <a-col :span="6">
           <a-tree
@@ -8,7 +9,7 @@
               :tree-data="level1"
               @select="onSelect"
               :replaceFields="{title: 'name', key: 'id', value: 'id'}"
-              :defaultExpandAll="true"
+              :defaultExpandAll="defaultSelectedKeys"
           >
           </a-tree>
         </a-col>
@@ -30,6 +31,11 @@ import {useRoute} from "vue-router";
     const route = useRoute();
     const docs = ref();
     const html = ref();
+const defaultSelectedKeys = ref();
+defaultSelectedKeys.value = [];
+// 当前选中的文档
+const doc = ref();
+doc.value = {};
 
     /**
      * 一级文档树，children属性就是二级文档
@@ -70,6 +76,13 @@ const handleQueryContent = (id: number) => {
 
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value, 0);
+
+          if (Tool.isNotEmpty(level1)) {
+            defaultSelectedKeys.value = [level1.value[0].id];
+            handleQueryContent(level1.value[0].id);
+            // 初始显示文档信息
+            doc.value = level1.value[0];
+          }
           }
         else {
           message.error(data.message);
@@ -92,7 +105,7 @@ const onSelect = (selectedKeys: any, info: any) => {
     });
 
 </script>
-<style>
+<style scoped>
 /* wangeditor默认样式, 参照: http://www.wangeditor.com/doc/pages/02-%E5%86%85%E5%AE%B9%E5%A4%84%E7%90%86/03-%E8%8E%B7%E5%8F%96html.html */
 /* table 样式 */
 .wangeditor table {
