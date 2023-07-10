@@ -86,9 +86,13 @@
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort" />
       </a-form-item>
+      <a-form-item label="内容">
+        <div id="content"></div>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
+
 <script lang="ts" setup>
 import { onMounted, ref,createVNode } from 'vue';
 import axios from 'axios';
@@ -96,6 +100,10 @@ import {message,Modal} from "ant-design-vue";
 import ExclamationCircleOutlined from "@ant-design/icons-vue/ExclamationCircleOutlined";
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
+import E from 'wangeditor';
+import i18next from 'i18next'
+
+
 
     const route = useRoute()
     console.log("路由：", route);
@@ -165,6 +173,7 @@ import {useRoute} from "vue-router";
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value, 0);
           console.log("树形结构：", level1);
+
         }else {
           message.error(data.message)
         }
@@ -175,6 +184,8 @@ import {useRoute} from "vue-router";
     const doc = ref({})
     const modalVisible = ref(false);
     const modalLoading = ref(false);
+    const editor = new E('#content')
+
     const handleModalOk = () => {
       modalLoading.value = true
       axios.post("/doc/save",doc.value).then((response) => {
@@ -203,6 +214,8 @@ import {useRoute} from "vue-router";
 
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: '无'});
+      setTimeout(() => {editor.create()},100)
+      editor.i18next = null
     };
 
     /**
@@ -218,6 +231,8 @@ import {useRoute} from "vue-router";
 
       // 为选择树添加一个"无"
       treeSelectData.value.unshift({id: 0, name: '无'});
+      setTimeout(() => {editor.create()},100)
+
     };
 
 
@@ -313,6 +328,7 @@ const handleDelete = (id: number) => {
 }
     onMounted(() => {
       handleQuery()
+      editor.i18next = null
     })
 </script>
 <style scoped>
