@@ -20,15 +20,12 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, onMounted, ref, createVNode } from 'vue';
+import {  onMounted, ref, createVNode } from 'vue';
 import axios from 'axios';
 import {message} from 'ant-design-vue';
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
 
-export default defineComponent({
-  name: 'Doc',
-  setup() {
     const route = useRoute();
     const docs = ref();
 
@@ -50,7 +47,7 @@ export default defineComponent({
      * 数据查询
      **/
     const handleQuery = () => {
-      axios.get("/doc/all/").then((response) => {
+      axios.get("/doc/all").then((response) => {
         const data = response.data;
         if (data.success) {
           docs.value = data.content;
@@ -68,6 +65,4 @@ export default defineComponent({
       handleQuery();
     });
 
-  }
-});
 </script>
