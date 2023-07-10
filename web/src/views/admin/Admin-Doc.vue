@@ -20,11 +20,13 @@
             </a-form>
           </P>
           <a-table
+              v-if="level1.length > 0"
               :columns="columns"
               :row-key="record => record.id"
               :data-source="level1"
               :loading="loading"
               :pagination="false"
+              :defaultExpandAllRows="true"
           >
             <template #name="{ text,record }">
               {{record.sort}} {{text}}
@@ -74,20 +76,20 @@
             >
             </a-tree-select>
           </a-form-item>
-          <a-form-item label="父文档">
-            <!--        <a-input v-model:value="doc.parent" />-->
-            <a-select
-                v-model:value="doc.parent"
-                ref="select"
-            >
-              <a-select-option :value="0">
-                无
-              </a-select-option>
-              <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="doc.id === c.id">
-                {{c.name}}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
+<!--          <a-form-item label="父文档">-->
+<!--            &lt;!&ndash;        <a-input v-model:value="doc.parent" />&ndash;&gt;-->
+<!--            <a-select-->
+<!--                v-model:value="doc.parent"-->
+<!--                ref="select"-->
+<!--            >-->
+<!--              <a-select-option :value="0">-->
+<!--                无-->
+<!--              </a-select-option>-->
+<!--              <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="doc.id === c.id">-->
+<!--                {{c.name}}-->
+<!--              </a-select-option>-->
+<!--            </a-select>-->
+<!--          </a-form-item>-->
           <a-form-item>
             <a-input v-model:value="doc.sort" placeholder="顺序"/>
           </a-form-item>
