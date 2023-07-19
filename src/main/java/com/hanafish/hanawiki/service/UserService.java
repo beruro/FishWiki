@@ -8,6 +8,7 @@ import com.hanafish.hanawiki.exception.BusinessException;
 import com.hanafish.hanawiki.exception.BusinessExceptionCode;
 import com.hanafish.hanawiki.mapper.UserMapper;
 import com.hanafish.hanawiki.req.UserQueryReq;
+import com.hanafish.hanawiki.req.UserResetPasswordReq;
 import com.hanafish.hanawiki.req.UserSaveReq;
 import com.hanafish.hanawiki.resp.PageResq;
 import com.hanafish.hanawiki.resp.UserQueryResp;
@@ -79,7 +80,7 @@ public class UserService {
         } else {
             // 更新
             user.setLoginName(null);
-//            user.setPassword(null);
+            user.setPassword(null);
             userMapper.updateByPrimaryKeySelective(user);
         }
     }
@@ -101,5 +102,13 @@ public class UserService {
         } else {
             return userList.get(0);
         }
+    }
+
+    /**
+     * 修改密码
+     */
+    public void resetPassword(UserResetPasswordReq req) {
+        User user = CopyUtil.copy(req, User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 }
