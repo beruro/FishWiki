@@ -4,17 +4,20 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hanafish.hanawiki.domain.User;
 import com.hanafish.hanawiki.domain.UserExample;
+import com.hanafish.hanawiki.exception.BusinessException;
+import com.hanafish.hanawiki.exception.BusinessExceptionCode;
 import com.hanafish.hanawiki.mapper.UserMapper;
 import com.hanafish.hanawiki.req.UserQueryReq;
 import com.hanafish.hanawiki.req.UserSaveReq;
-import com.hanafish.hanawiki.resp.UserQueryResp;
 import com.hanafish.hanawiki.resp.PageResq;
+import com.hanafish.hanawiki.resp.UserQueryResp;
 import com.hanafish.hanawiki.util.CopyUtil;
 import com.hanafish.hanawiki.util.SnowFlake;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -63,6 +66,16 @@ public class UserService {
     public void save(UserSaveReq req) {
         User user = CopyUtil.copy(req, User.class);
         if (ObjectUtils.isEmpty(req.getId())) {
+
+            User userDB = selectByLoginName(req.getLoginName());
+            if (ObjectUtils.isEmpty(userDB)) {
+                // 新增
+                user.setId(snowFlake.nextId());
+                userMapper.insert(user);
+            } else {
+                // 用户名已存在
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+            }
             // 新增
             user.setId(snowFlake.nextId());
             userMapper.insert(user);
@@ -77,5 +90,17 @@ public class UserService {
      */
     public void delete (Long id) {
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    public User selectByLoginName(String LoginName) {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andLoginNameEqualTo(LoginName);
+        List<User> userList = userMapper.selectByExample(userExample);
+        if (CollectionUtils.isEmpty(userList)) {
+            return null;
+        } else {
+            return userList.get(0);
+        }
     }
 }
