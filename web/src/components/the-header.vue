@@ -22,7 +22,26 @@
       <a-menu-item key="/about">
         <router-link to="/about">关于我们</router-link>
       </a-menu-item>
+      <a class="login-menu" @click="showLoginModal">
+        <span>登录</span>
+      </a>
     </a-menu>
+
+    <a-modal
+        title="登录"
+        v-model:visible="loginModalVisible"
+        :confirm-loading="loginModalLoading"
+        @ok="login"
+    >
+      <a-form :model="loginUser" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+        <a-form-item label="登录名">
+          <a-input v-model:value="loginUser.loginName" />
+        </a-form-item>
+        <a-form-item label="密码">
+          <a-input v-model:value="loginUser.password" type="password" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </a-layout-header>
 </template>
 
@@ -30,20 +49,50 @@
 import {defineProps, onMounted, ref} from 'vue';
 import axios from "axios";
 
+// 用来登录
+const loginUser = ref({
+  loginName: "test",
+  password: "test"
+});
+const loginModalVisible = ref(false);
+const loginModalLoading = ref(false);
+const showLoginModal = () => {
+  loginModalVisible.value = true;
+};
+
+// 登录
+const login = () => {
+  console.log("登录开始");
+};
+
   type Props={
     title:string
   }
   defineProps<Props>();
   const ebook = ref()
-  onMounted(() => {
-    axios.get('http://localhost:8880/ebook/list1?name=Spring').then((res) => {
-      const data = res.data
-      ebook.value = data.content
-    })
-  })
+  // onMounted(() => {
+  //   axios.get('http://localhost:8880/ebook/list1?name=Spring').then((res) => {
+  //     const data = res.data
+  //     ebook.value = data.content
+  //   })
+  // })
 
 </script>
 
-<style scoped>
+<style >
+.logo {
+  width: 120px;
+  height: 31px;
+  /*background: rgba(255, 255, 255, 0.2);*/
+  /*margin: 16px 28px 16px 0;*/
+  float: left;
+  color: white;
+  font-size: 18px;
+}
 
+.login-menu {
+  float: right;
+  color: white;
+  /*padding-left: 10px;*/
+}
 </style>
