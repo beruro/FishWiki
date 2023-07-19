@@ -76,12 +76,11 @@ public class UserService {
                 // 用户名已存在
                 throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
             }
-            // 新增
-            user.setId(snowFlake.nextId());
-            userMapper.insert(user);
         } else {
             // 更新
-            userMapper.updateByPrimaryKey(user);
+            user.setLoginName(null);
+//            user.setPassword(null);
+            userMapper.updateByPrimaryKeySelective(user);
         }
     }
 
