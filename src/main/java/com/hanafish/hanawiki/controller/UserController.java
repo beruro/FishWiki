@@ -8,6 +8,7 @@ import com.hanafish.hanawiki.resp.PageResq;
 import com.hanafish.hanawiki.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,6 +29,7 @@ public class UserController {
 
     @PostMapping("/save")
     public CommonResp save(@Valid @RequestBody UserSaveReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
         return resp;
