@@ -2,12 +2,12 @@ package com.hanafish.hanawiki.job;
 
 import com.hanafish.hanawiki.service.DocService;
 import com.hanafish.hanawiki.util.SnowFlake;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import jakarta.annotation.Resource;
 
 @Component
 public class DocJob {
@@ -25,8 +25,8 @@ public class DocJob {
      */
     @Scheduled(cron = "5/30 * * * * ?")
     public void cron() {
-        // 增加日志流水号
-//        MDC.put("LOG_ID", String.valueOf(snowFlake.nextId()));
+         //增加日志流水号
+        MDC.put("LOG_ID", String.valueOf(snowFlake.nextId()));
         LOG.info("更新电子书下的文档数据开始");
         long start = System.currentTimeMillis();
         docService.updateEbookInfo();
