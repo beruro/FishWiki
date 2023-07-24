@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.hanafish.hanawiki.domain.Content;
 import com.hanafish.hanawiki.domain.Doc;
 import com.hanafish.hanawiki.domain.DocExample;
+import com.hanafish.hanawiki.exception.BusinessException;
+import com.hanafish.hanawiki.exception.BusinessExceptionCode;
 import com.hanafish.hanawiki.mapper.ContentMapper;
 import com.hanafish.hanawiki.mapper.DocMapper;
 import com.hanafish.hanawiki.mapper.DocMapperCust;
@@ -13,6 +15,8 @@ import com.hanafish.hanawiki.req.DocSaveReq;
 import com.hanafish.hanawiki.resp.DocQueryResp;
 import com.hanafish.hanawiki.resp.PageResq;
 import com.hanafish.hanawiki.util.CopyUtil;
+import com.hanafish.hanawiki.util.RedisUtil;
+import com.hanafish.hanawiki.util.RequestContext;
 import com.hanafish.hanawiki.util.SnowFlake;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -38,6 +42,10 @@ public class DocService {
 
     @Resource
     private SnowFlake snowFlake;
+
+    @Resource
+    public RedisUtil redisUtil;
+
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
@@ -129,6 +137,13 @@ public class DocService {
      * 点赞
      */
     public void vote(Long id) {
-        docMapperCust.increaseVoteCount(id);
+//        docMapperCust.increaseVoteCount(id);
+        // 远程IP+doc.id作为key，24小时内不能重复
+        String ip = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5000)) {
+            docMapperCust.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
 }
