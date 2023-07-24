@@ -7,10 +7,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan("com.hanafish")
 @SpringBootApplication
 @MapperScan("com.hanafish.hanawiki.mapper")
+@EnableScheduling
 public class HanawikiApplication {
 
     private static final Logger LOG = LoggerFactory.getLogger(HanawikiApplication.class);
