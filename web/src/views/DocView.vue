@@ -9,7 +9,8 @@
               :tree-data="level1"
               @select="onSelect"
               :replaceFields="{title: 'name', key: 'id', value: 'id'}"
-              :defaultExpandAll="defaultSelectedKeys"
+              :defaultSelectedKeys="defaultSelectedKeys"
+              :defaultExpandAll="true"
           >
           </a-tree>
         </a-col>
@@ -82,6 +83,7 @@ const handleQueryContent = (id: number) => {
      * 数据查询
      **/
     const handleQuery = () => {
+
       axios.get("/doc/all/" + route.query.ebookId).then((response) => {
         const data = response.data;
         if (data.success) {
@@ -106,8 +108,9 @@ const handleQueryContent = (id: number) => {
 const onSelect = (selectedKeys: any, info: any) => {
   console.log('selected', selectedKeys, info);
   if (Tool.isNotEmpty(selectedKeys)) {
+    // console.log(info)
     // 选中某一节点时，加载该节点的文档信息
-    doc.value = info.selectedNodes[0].props;
+    doc.value = info.selectedNodes[0];
     // 加载内容
     handleQueryContent(selectedKeys[0]);
   }

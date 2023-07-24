@@ -74,6 +74,7 @@ import { message } from 'ant-design-vue';
 import {Tool} from "@/util/tool";
 
 const ebooks = ref()
+const openKeys =  ref();
 // const ebook1 = reactive({books:[]})
 
 const level1 =  ref();
@@ -87,6 +88,13 @@ const handleQueryCategory = () => {
     if (data.success) {
       categorys = data.content;
       console.log("原始数组：", categorys);
+
+
+      // 加载完分类后，将侧边栏全部展开
+      openKeys.value = [];
+      for (let i = 0; i < categorys.length; i++) {
+        openKeys.value.push(categorys[i].id)
+      }
 
       level1.value = [];
       level1.value = Tool.array2Tree(categorys, 0);

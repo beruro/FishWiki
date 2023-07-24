@@ -232,57 +232,6 @@ import i18next from 'i18next'
     }
 
 /**
- * 内容查询
- **/
-const handleQueryContent = () => {
-  axios.get("/doc/find-content/" + doc.value.id).then((response) => {
-    const data = response.data;
-    if (data.success) {
-      editor.txt.html(data.content)
-    } else {
-      message.error(data.message);
-    }
-  });
-};
-
-    /**
-     * 编辑
-     */
-    const edit = (record: any) => {
-      // // 清空富文本框
-      editor.txt.html("");
-      modalVisible.value = true;
-      doc.value = Tool.copy(record);
-      handleQueryContent()
-
-      // 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
-      treeSelectData.value = Tool.copy(level1.value);
-      setDisable(treeSelectData.value, record.id);
-
-      // 为选择树添加一个"无"
-      treeSelectData.value.unshift({id: 0, name: '无'});
-    };
-
-    /**
-     * 新增
-     */
-    const add = () => {
-      // // 清空富文本框
-      editor.txt.html("");
-      modalVisible.value = true;
-      doc.value = {
-        ebookId: route.query.ebookId
-      }
-
-      treeSelectData.value = Tool.copy(level1.value) || [];
-
-      // 为选择树添加一个"无"
-      treeSelectData.value.unshift({id: 0, name: '无'});
-    };
-
-
-
-/**
  * 将某节点及其子孙节点全部置为disabled
  */
 const setDisable = (treeSelectData: any, id: any) => {
@@ -347,6 +296,57 @@ const getDeleteIds = (treeSelectData: any, id: any) => {
     }
   }
 };
+
+/**
+ * 内容查询
+ **/
+const handleQueryContent = () => {
+  axios.get("/doc/find-content/" + doc.value.id).then((response) => {
+    const data = response.data;
+    if (data.success) {
+      editor.txt.html(data.content)
+    } else {
+      message.error(data.message);
+    }
+  });
+};
+
+/**
+ * 编辑
+ */
+const edit = (record: any) => {
+  // // 清空富文本框
+  editor.txt.html("");
+  modalVisible.value = true;
+  doc.value = Tool.copy(record);
+  handleQueryContent()
+
+  // 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
+  treeSelectData.value = Tool.copy(level1.value);
+  setDisable(treeSelectData.value, record.id);
+
+  // 为选择树添加一个"无"
+  treeSelectData.value.unshift({id: 0, name: '无'});
+};
+
+/**
+ * 新增
+ */
+const add = () => {
+  // // 清空富文本框
+  editor.txt.html("");
+  modalVisible.value = true;
+  doc.value = {
+    ebookId: route.query.ebookId
+  }
+
+  treeSelectData.value = Tool.copy(level1.value) || [];
+
+  // 为选择树添加一个"无"
+  treeSelectData.value.unshift({id: 0, name: '无'});
+};
+
+
 
 const handleDelete = (id: number) => {
   // 清空数组，否则多次删除时，数组会一直增加

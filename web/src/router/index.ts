@@ -55,7 +55,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/admin/doc',
-    name: 'AdmimDoc',
+    name: 'AdminDoc',
     component: AdminDoc,
     meta: {
       loginRequire: true
