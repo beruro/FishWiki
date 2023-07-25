@@ -26,7 +26,7 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show="isShowWelcome">
-        <h1>欢迎使用知识库</h1>
+        <the-welcome></the-welcome>
       </div>
       <a-list v-show="!isShowWelcome" item-layout="vertical" size="large"  :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
         <template #footer>
@@ -69,6 +69,7 @@
 <script lang="ts" setup>
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import {defineComponent, onMounted, reactive, ref} from 'vue';
+import TheWelcome from '@/components/the-welcome.vue';
 import axios from "axios";
 import { message } from 'ant-design-vue';
 import {Tool} from "@/util/tool";
